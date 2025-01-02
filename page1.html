@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        /* Universal Styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('background.jpg'); /* Add your image URL here */
+            background-size: cover; /* Ensure the image covers the entire background */
+            background-position: center; /* Keep the image centered */
+            background-attachment: fixed; /* Keep the background fixed during scrolling */
+        }
+
+        .calculator {
+            background-color: rgba(255, 255, 255, 0.9); /* White with slight transparency */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 320px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        #display {
+            background-color: #333; /* Dark display area */
+            color: white;
+            font-size: 32px;
+            text-align: right;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #f4f4f4; /* Light gray button */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 20px;
+            padding: 20px;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: black;
+        }
+
+        button:active {
+            background-color: #ADD8E6; /* Light blue when clicked */
+        }
+
+        button.operator {
+            background-color: #007BFF; /* Blue operators */
+            color: white;
+        }
+
+        button.operator:active {
+            background-color: #005bb5;
+        }
+
+        button.equal {
+            background-color: #135975; /* Green equal button */
+            color: white;
+        }
+
+        button.equal:active {
+            background-color: #1ca5af;
+        }
+
+        /* Ensure responsive design */
+        @media (max-width: 480px) {
+            .calculator {
+                width: 100%; /* Make calculator full-width on smaller screens */
+                max-width: 400px; /* Maximum width */
+                padding: 10px;
+            }
+
+            #display {
+                font-size: 28px; /* Adjust display font size for smaller screens */
+            }
+
+            button {
+                font-size: 18px; /* Adjust button font size for smaller screens */
+                padding: 18px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div id="display">0</div>
+        <div class="button-row">
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('/')">/</button>
+            <button onclick="appendToDisplay('*')">*</button>
+            <button onclick="appendToDisplay('%')">%</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('-')">-</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('+')">+</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('.')">.</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="calculate()" class="equal">=</button>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '0';  // Store the current input on the display
+
+        function clearDisplay() {
+            currentInput = '0';  // Reset input to 0
+            updateDisplay();
+        }
+
+        function appendToDisplay(value) {
+            if (currentInput === '0' && value !== '.') {
+                currentInput = value;
+            } else {
+                currentInput += value;
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').textContent = currentInput;
+        }
+
+        function calculate() {
+            try {
+                currentInput = eval(currentInput).toString(); // Calculate the result using eval
+                updateDisplay();
+            } catch (e) {
+                currentInput = 'Error'; // Show error in case of invalid operation
+                updateDisplay();
+            }
+        }
+    </script>
+
+</body>
+</html>

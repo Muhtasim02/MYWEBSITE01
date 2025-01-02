@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('2.jpg'); /* Replace with your image URL */
+            background-size: cover; /* Ensure the image covers the entire background */
+            background-position: center; /* Center the background image */
+            background-attachment: fixed; /* Keep the background fixed during scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            flex-direction: column;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            border: 2px solid white;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.7); /* Slight transparency */
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .yes-button {
+            background-color: green;
+            color: white;
+        }
+
+        .yes-button:hover {
+            background-color: darkgreen;
+        }
+
+        .no-button {
+            background-color: red;
+            color: white;
+        }
+
+        .no-button:hover {
+            background-color: darkred;
+        }
+
+        .result {
+            margin-top: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .question {
+                font-size: 18px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 8px 15px;
+            }
+
+            .result {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Love or Attachment Test</h1>
+        <div id="question-container">
+            <div class="question" id="question-text">Do you think about them constantly?</div>
+            <div class="buttons">
+                <button class="yes-button" onclick="answerQuestion(true)">Yes</button>
+                <button class="no-button" onclick="answerQuestion(false)">No</button>
+            </div>
+        </div>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let yesCount = 0;
+        const totalQuestions = 10;
+
+        const questions = [
+            "Do you think about them constantly?",
+            "Do you feel happy when they smile?",
+            "Do you miss them when they are not around?",
+            "Do you feel anxious when they are upset?",
+            "Do you imagine a future with them?",
+            "Do you feel the need to protect them?",
+            "Do you prioritize their needs over your own?",
+            "Do you feel complete when you're with them?",
+            "Do you support each other emotionally?",
+            "Do you trust them completely?"
+        ];
+
+        // Display the next question
+        function displayNextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                document.getElementById('question-text').textContent = questions[currentQuestion];
+            } else {
+                showResult();
+            }
+        }
+
+        // Handle the answer
+        function answerQuestion(isYes) {
+            yesCount += isYes ? 1 : 0;
+            currentQuestion++;
+            displayNextQuestion();
+        }
+
+        // Display the result after all questions
+        function showResult() {
+            let resultText = '';
+            if (yesCount < 6) {
+                resultText = 'Fake Love';
+            } else if (yesCount < 8) {
+                resultText = 'Attachment';
+            } else {
+                resultText = 'True Love';
+            }
+
+            // Display the result on the screen
+            document.getElementById('result').textContent = `Your result: ${resultText}`;
+        }
+
+        // Initialize the test when the page loads
+        window.onload = function() {
+            displayNextQuestion();
+        };
+    </script>
+
+</body>
+</html>
+

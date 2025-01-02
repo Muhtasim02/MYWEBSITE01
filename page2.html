@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad</title>
+    <style>
+        /* Universal Styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('background.jpg'); /* Replace with your image URL */
+            background-size: cover; /* Ensure the image covers the entire background */
+            background-position: center; /* Center the background image */
+            background-attachment: fixed; /* Keep the background fixed during scrolling */
+        }
+
+        .notepad {
+            background-color: rgba(255, 255, 255, 0.9); /* White with slight transparency */
+            border: 2px dashed black; /* Black dashed border */
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #text-area {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            padding: 10px;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            line-height: 1.5;
+            background-color: #f4f4f4; /* Light gray background */
+            border-radius: 5px;
+        }
+
+        #word-count {
+            text-align: right;
+            font-size: 16px;
+            margin-top: 10px;
+            color: black;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #11557c; /* Green button */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4592a0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .notepad {
+                width: 100%;
+                max-width: 400px;
+                padding: 10px;
+            }
+
+            #text-area {
+                font-size: 16px;
+            }
+
+            #word-count {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="notepad">
+        <textarea id="text-area" placeholder="Start writing..." oninput="updateWordCount()"></textarea>
+        <div id="word-count">Words: 0 / 200</div>
+
+        <div class="button-container">
+            <button onclick="saveText()">Save</button>
+            <button onclick="newWriting()">New Writing</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to update word count and restrict input
+        function updateWordCount() {
+            const textArea = document.getElementById("text-area");
+            const wordCountElement = document.getElementById("word-count");
+
+            // Split the text by spaces and filter out empty strings (in case of multiple spaces)
+            const words = textArea.value.trim().split(/\s+/).filter(Boolean);
+
+            // Check if the word count exceeds 200
+            if (words.length > 200) {
+                words.length = 200; // Limit to 200 words
+                textArea.value = words.join(" "); // Update the text area value with the first 200 words
+            }
+
+            // Update the word count display
+            wordCountElement.textContent = `Words: ${words.length} / 200`;
+        }
+
+        // Function to save the text to local storage
+        function saveText() {
+            const text = document.getElementById("text-area").value;
+            localStorage.setItem("notepadText", text); // Save the text in localStorage
+            alert("Your writing has been saved.");
+        }
+
+        // Function to load the saved text from local storage
+        function loadSavedText() {
+            const savedText = localStorage.getItem("notepadText");
+            if (savedText) {
+                document.getElementById("text-area").value = savedText; // Restore the saved text
+                updateWordCount(); // Update word count after loading the saved text
+            }
+        }
+
+        // Function to clear the text area and start new writing
+        function newWriting() {
+            document.getElementById("text-area").value = ''; // Clear the text area
+            localStorage.removeItem("notepadText"); // Remove saved text from localStorage
+            updateWordCount(); // Reset the word count
+        }
+
+        // Load saved text when the page is loaded (if any)
+        window.onload = loadSavedText;
+    </script>
+
+</body>
+</html>

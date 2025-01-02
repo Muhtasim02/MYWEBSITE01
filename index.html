@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        /* Universal Styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('background.jpg'); /* Add your image URL here */
+            background-size: cover; /* Make sure the image covers the whole background */
+            background-position: center; /* Center the background image */
+            background-attachment: fixed; /* Keeps the background image fixed during scrolling */
+        }
+
+        #site-name {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            position: absolute;
+            top: 10px;
+            text-align: center;
+        }
+
+        #site-name a {
+            text-decoration: none; /* Remove underline */
+            color: white; /* Make the link color the same as the site name color */
+            transition: color 0.3s ease; /* Smooth transition for color change */
+        }
+
+        #site-name a:hover {
+            color: #007BFF; /* Change color on hover */
+        }
+
+        #welcome {
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #00317a;
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 2px solid #007BFF;
+            background-color: #ffffff;
+            color: #007BFF;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        button:hover {
+            background-color: #007BFF;
+            color: #ffffff;
+        }
+
+        /* Media Query for small screens */
+        @media (max-width: 768px) {
+            #welcome {
+                font-size: 32px;
+                margin-bottom: 20px;
+            }
+
+            .button-container {
+                flex-direction: column; /* Stack buttons vertically */
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            button {
+                width: 80%; /* Make buttons take up most of the screen width */
+                max-width: 300px; /* Limit maximum width of buttons */
+            }
+
+            #site-name {
+                font-size: 30px; /* Slightly smaller on small screens */
+                top: 15px;
+            }
+        }
+
+        /* Media Query for extra small screens (e.g., mobile devices in portrait mode) */
+        @media (max-width: 480px) {
+            #welcome {
+                font-size: 28px;
+            }
+
+            button {
+                width: 90%; /* Make buttons even wider on very small screens */
+                max-width: 250px;
+            }
+
+            #site-name {
+                font-size: 26px; /* Further reduce font size for very small screens */
+                top: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="site-name"><a href="page4.html">MY.SITE</a></div>
+
+    <div id="welcome">Welcome</div>
+
+    <div class="button-container">
+        <button onclick="window.location.href='page1.html'">CALCULATOR</button>
+        <button onclick="window.location.href='page2.html'">NOTEPAD</button>
+        <button onclick="window.location.href='page3.html'">LOVE TEST</button>
+    </div>
+
+</body>
+</html>
