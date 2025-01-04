@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather & Quotes</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('background.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .content {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .weather-info {
+            margin-bottom: 20px;
+        }
+
+        #temperature {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 10px;
+            border: 2px solid #4CAF50;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]::placeholder {
+            color: #ddd;
+            font-style: italic;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            background-color: #298399;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #05335e;
+        }
+
+        .quote-container {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .calendar-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Calendar styling */
+        #calendar {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #095353;
+        }
+
+        td {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        td.today {
+            background-color: #ffeb3b;
+            color: #000;
+            font-weight: bold;
+            transform: scale(1.1);
+            transition: all 0.3s ease;
+        }
+
+        td.today:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .content {
+                padding: 15px;
+                width: 90%;
+            }
+            input[type="text"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Weather & Quotes</h1>
+        <div class="weather-info">
+            <input list="city-list" id="location-input" placeholder="Enter location (city)" />
+            <datalist id="city-list">
+                <option value="New York">
+                <option value="Los Angeles">
+                <option value="Chicago">
+                <option value="Miami">
+                <option value="San Francisco">
+                <option value="Dallas">
+                <option value="Boston">
+                <!-- Add more cities as needed -->
+            </datalist>
+            <button onclick="getWeather()">Get Weather</button>
+            <p id="temperature">Temperature: N/A</p>
+        </div>
+        <div class="quote-container" onclick="generateQuote()">
+            <p id="quote">Click anywhere to get a random quote!</p>
+        </div>
+        <div class="calendar-container">
+            <h3>Calendar</h3>
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Array of random quotes
+        const quotes = [
+    // Love Quotes
+    "Love is composed of a single soul inhabiting two bodies. - Aristotle",
+    "In the end, we only regret the chances we didn’t take. - Lewis Carroll",
+    "Love is not about possession, it's about appreciation. - Osho",
+    "To love and be loved is to feel the sun from both sides. - David Viscott",
+    "Love is when the other person’s happiness is more important than your own. - H. Jackson Brown Jr.",
+    "You don’t love someone because they’re perfect. You love them in spite of the fact that they’re not. - Jodi Picoult",
+    "A loving heart is the truest wisdom. - Charles Dickens",
+    "Love is the only reality, and it is not a mere sentiment. It is the ultimate truth that lies at the heart of creation. - Rabindranath Tagore",
+    "Love is like the wind, you can’t see it but you can feel it. - Nicholas Sparks",
+    "True love cannot be found where it does not exist, nor can it be denied where it does. - Torquato Tasso",
+    "Love is a friendship set to music. - Joseph Campbell",
+    "The best thing to hold onto in life is each other. - Audrey Hepburn",
+    "Love looks not with the eyes, but with the mind, and therefore is winged Cupid painted blind. - William Shakespeare",
+    "We are most alive when we're in love. - John Updike",
+    "Being deeply loved by someone gives you strength, while loving someone deeply gives you courage. - Lao Tzu",
+    "Love is not a feeling of happiness. Love is a willingness to sacrifice. - Michael Novak",
+    "Love isn’t something you find. Love is something that finds you. - Loretta Young",
+    "There is no remedy for love but to love more. - Henry David Thoreau",
+    "You are my heart, my life, my one and only thought. - Arthur Conan Doyle",
+    "The best thing about me is you. - Shannon Crown",
+
+    // Study Quotes
+    "Study hard, for the well is deep, and our brains are shallow. - Richard Baxter",
+    "Education is the most powerful weapon which you can use to change the world. - Nelson Mandela",
+    "The only way to do great work is to love what you do. - Steve Jobs",
+    "Intelligence is the ability to adapt to change. - Stephen Hawking",
+    "Success is the sum of small efforts, repeated day in and day out. - Robert Collier",
+    "Education is not the filling of a pail, but the lighting of a fire. - W.B. Yeats",
+    "A person who won’t read has no advantage over one who can’t read. - Mark Twain",
+    "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+    "The more that you read, the more things you will know. The more that you learn, the more places you’ll go. - Dr. Seuss",
+    "Knowledge is power. - Sir Francis Bacon",
+    "Don’t watch the clock; do what it does. Keep going. - Sam Levenson",
+    "Success is the result of preparation, hard work, and learning from failure. - Colin Powell",
+    "The expert in anything was once a beginner. - Helen Hayes",
+    "Striving for success without hard work is like trying to harvest where you haven’t planted. - David Bly",
+    "The beautiful thing about learning is that no one can take it away from you. - B.B. King",
+    "An investment in knowledge pays the best interest. - Benjamin Franklin",
+    "It always seems impossible until it’s done. - Nelson Mandela",
+    "Learning never exhausts the mind, it only ignites it. - Leonardo da Vinci",
+    "Knowledge comes, but wisdom lingers. - Alfred Lord Tennyson",
+    "The road to success and the road to failure are almost exactly the same. - Colin R. Davis",
+
+    // Passion Quotes
+    "Passion is energy. Feel the power that comes from focusing on what excites you. - Oprah Winfrey",
+    "Do what you love and you’ll never work a day in your life. - Confucius",
+    "Success is not the key to happiness. Happiness is the key to success. - Albert Schweitzer",
+    "The only way to do great work is to love what you do. - Steve Jobs",
+    "When you do something with passion, it shows. - Unknown",
+    "Passion is the fuel in the fire of action. - Tony Robbins",
+    "You are never too old to set another goal or to dream a new dream. - C.S. Lewis",
+    "Passion will move men beyond themselves. - Joseph Campbell",
+    "Follow your passion. It will lead you to your purpose. - Oprah Winfrey",
+    "Passion is the difference between having a career or having a job. - Unknown",
+    "There is no passion to be found playing small – in settling for a life that is less than the one you are capable of living. - Nelson Mandela",
+    "Nothing great in the world has ever been accomplished without passion. - Georg Wilhelm Friedrich Hegel",
+    "Passion is the genesis of genius. - Tony Robbins",
+    "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+    "Your passion is waiting for your courage to catch up. - Isabelle Lafleche",
+    "Life without passion is like a body without a soul. - Unknown",
+    "When you are passionate about something, everything falls into place. - Unknown",
+    "If you don’t love what you do, you won’t do it with much conviction or passion. - Mia Hamm",
+    "Passion is the difference between having a career or having a job. - Unknown",
+    "Success is not for the chosen few, but for the passionate and persistent. - Unknown",
+
+    // Heartbreak Quotes
+    "The heart was made to be broken. - Oscar Wilde",
+    "The greatest pain that comes from love is loving someone you can never have. - Unknown",
+    "It’s hard to forget someone who gave you so much to remember. - Unknown",
+    "Sometimes the one who loves you is the one who hurts you the most. - Unknown",
+    "Don’t cry when the sun is gone, because the tears won’t let you see the stars. - Unknown",
+    "The pain of love is the pain of being alive. It’s a perpetual wound. - Maurice Merleau-Ponty",
+    "Heartbreak is a blessing from God. It’s just His way of letting you realize He saved you from the wrong one. - Unknown",
+    "The worst feeling in the world is knowing you’ve been taken for granted. - Unknown",
+    "You can love someone so much...But you can never love people as much as you can miss them. - John Green",
+    "It’s not about who hurt you and broke you down. It’s about who was always there and made you smile again. - Unknown",
+    "I am not what happened to me, I am what I choose to become. - Carl Jung",
+    "Heartbreaks are just a reminder that you are worthy of love. - Unknown",
+    "When one door closes, another one opens. But it can be hard to see it in the moment. - Unknown",
+    "It’s better to be slapped with the truth than kissed with a lie. - Unknown",
+    "You never know how strong you are until being strong is your only choice. - Bob Marley",
+    "You can never forget the person who you loved with all your heart. - Unknown",
+    "Time heals all wounds, but the scars remain forever. - Unknown",
+    "There’s no remedy for love but to love more. - Henry David Thoreau",
+    "Sometimes, the one you want the most is the one you can’t have. - Unknown",
+    "The only way to get over someone is to get under someone else. - Unknown",
+
+    // Care Quotes
+    "To care for those who once cared for us is one of the highest honors. - Tia Walker",
+    "The closest thing to being cared for is to care for someone else. - Carson McCullers",
+    "Take care to get what you like or you will be forced to like what you get. - George Bernard Shaw",
+    "The simple act of caring is heroic. - Edward Albert",
+    "Nobody cares how much you know until they know how much you care. - Theodore Roosevelt",
+    "To love and be loved is to feel the sun from both sides. - David Viscott",
+    "The best way to find yourself is to lose yourself in the service of others. - Mahatma Gandhi",
+    "Take care of yourself first, because no one else can. - Unknown",
+    "A person who feels appreciated will always do more than what is expected. - Unknown",
+    "The best way to show love is through action. - Unknown",
+    "Taking care of yourself is part of taking care of others. - Unknown",
+    "To care for someone is to share your life with them. - Unknown",
+    "Caring for others is an expression of what it means to be fully human. - Hillary Clinton",
+    "We cannot do great things on this Earth, only small things with great love. - Mother Teresa",
+    "Sometimes the smallest things take up the most room in your heart. - A.A. Milne",
+    "Be kind to others, but most of all, be kind to yourself. - Unknown",
+    "Kindness is the language which the deaf can hear and the blind can see. - Mark Twain",
+    "Caring for others is the only way to make life truly meaningful. - Unknown",
+    "The best care you can give yourself is to give yourself love and patience. - Unknown",
+    "In caring for others, we often care for ourselves. - Unknown"
+];
+
+        // Function to generate random quotes
+        function generateQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById("quote").textContent = quotes[randomIndex];
+        }
+
+        // Fetch current weather data for the location entered by the user
+        function getWeather() {
+            const location = document.getElementById("location-input").value.trim();
+            if (!location) {
+                alert("Please enter a location.");
+                return;
+            }
+
+            const apiKey = 'your_api_key';  // Replace with your OpenWeatherMap API key
+            const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
+            // Fetch data with proper error handling
+            fetch(weatherApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Location not found: ${location}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const temp = data.main.temp;
+                    document.getElementById("temperature").textContent = `Temperature: ${temp}°C`;
+                })
+                .catch(error => {
+                    console.error("Error fetching weather data:", error);
+                    alert("Could not retrieve weather data. Please check the location and try again.");
+                });
+        }
+
+        // Function to generate and display the current month’s calendar
+        function generateCalendar() {
+            const now = new Date();
+            const month = now.getMonth();
+            const year = now.getFullYear();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1).getDay();
+            const today = now.getDate();
+
+            let calendarHtml = "<table><tr>";
+
+            // Adding day names
+            const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            for (let i = 0; i < 7; i++) {
+                calendarHtml += `<th>${dayNames[i]}</th>`;
+            }
+            calendarHtml += "</tr><tr>";
+
+            // Adding empty cells for the first day
+            for (let i = 0; i < firstDay; i++) {
+                calendarHtml += "<td></td>";
+            }
+
+            // Adding days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                if ((firstDay + day - 1) % 7 === 0 && day !== 1) {
+                    calendarHtml += "</tr><tr>";
+                }
+                const todayClass = day === today ? 'today' : '';
+                calendarHtml += `<td class="${todayClass}">${day}</td>`;
+            }
+
+            calendarHtml += "</tr></table>";
+
+            document.getElementById("calendar").innerHTML = calendarHtml;
+        }
+
+        // Initialize the calendar and random quote
+        window.onload = function() {
+            generateCalendar();
+            generateQuote();
+        };
+    </script>
+</body>
+</html>
